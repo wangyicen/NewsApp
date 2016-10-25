@@ -3,6 +3,7 @@ package com.feicui.edu.newsapp.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.feicui.edu.newsapp.R;
@@ -38,9 +39,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newslist);
-
-        listView.setAdapter(adapter);
-
+        initView();
+        setListener();
         //判断数据库中是否存在本地缓存文件
         if (helper.quaryNewsCount()){
             quaryFromDB();
@@ -88,13 +88,14 @@ public class MainActivity extends BaseActivity {
 
         /*获取新闻数据DefaultHttpClient和HttpGet*/
 
-
-
     }
 
     private void quaryFromDB() {
+        datas = helper.quaryAllNews();
+        Log.i("quaryFromDB", datas.toString());
+        adapter.addDatas(datas);
+        adapter.notifyDataSetChanged();
     }
-
     private void downloadNews() {
         new Thread(){
             @Override
@@ -102,7 +103,8 @@ public class MainActivity extends BaseActivity {
                 super.run();
 //                发送请求的客户端对象
                 String json = NetUtils.httpGet(NetUtils.BASE_PATH +
-                        "news_list?ver="+ NetUtils.VERSION +"&subid=1&dir=1&nid=1id&stamp=20140321&cnt=20");
+                        "news_list?ver="+ NetUtils.VERSION +
+                        "&subid=1&dir=1&nid=1id&stamp=20140321&cnt=20");
                 //解析json数据
                 datas = ParserNews.parserNews(json);
                 //发送消息给Handler
@@ -116,6 +118,7 @@ public class MainActivity extends BaseActivity {
         listView = (ListView) findViewById(R.id.news_list_lv);
         adapter = new NewsListAdapter();
         helper = new DBHelper(this);
+        listView.setAdapter(adapter);
 
     }
 

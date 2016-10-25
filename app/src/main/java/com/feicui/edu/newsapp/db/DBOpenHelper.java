@@ -13,7 +13,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "news";
     public static final int DB_VERSION = 1;
 
-    public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,
+                        int version) {
         super(context, name, factory, version);
     }
     public DBOpenHelper(Context context) {
@@ -22,8 +23,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table" + DB_NAME + "(_id integer primary key autoincrement," +
-                "nid integer,title text,summary text,stamp text,icon text,link text,type text)");
+        db.execSQL("create table" + TABLE_NAME + "(_id integer primary key autoincrement," +
+                "nid integer,title text,summary text,stamp text,icon text,link text,type integer)");
     }
 
     @Override

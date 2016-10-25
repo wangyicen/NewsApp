@@ -60,4 +60,34 @@ public class DBHelper {
         return count == 0 ? false : true;
     }
 
+//    查询所有的新闻的数据
+    public ArrayList<News> quaryAllNews(){
+        ArrayList<News> datas = new ArrayList<News>();
+        //打开数据库
+        db = helper.getWritableDatabase();
+//      select * from news;
+        Cursor cursor = db.query(DBOpenHelper.TABLE_NAME, null, null, null, null, null, null);
+        if (cursor.moveToFirst()){
+            do {
+//                db.execSQL("create table" + TABLE_NAME + "(_id integer primary key autoincrement," +
+//                        "nid integer,title text,summary text,stamp text,icon text,link text,type integer)");
+                int nid = cursor.getInt(cursor.getColumnIndex("nid"));
+                String title = cursor.getString(cursor.getColumnIndex("title"));
+                String summary = cursor.getString(cursor.getColumnIndex("summary"));
+                String stamp = cursor.getString(cursor.getColumnIndex("stamp"));
+                String icon = cursor.getString(cursor.getColumnIndex("icon"));
+                String link = cursor.getString(cursor.getColumnIndex("link"));
+                int type = cursor.getInt(cursor.getColumnIndex("type"));
+//                int type, int nid, String stamp, String icon, String title, String summary, String link
+                News news = new News(type, nid, stamp, icon, title, summary, link);
+                datas.add(news);
+
+                cursor.close();
+                db.close();
+
+            }while (cursor.moveToNext());
+        }
+        return datas;
+    }
+
 }
